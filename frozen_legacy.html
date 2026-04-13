@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🏰 프로즌 레거시 (Frozen Legacy)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+
+:root {
+  --ice: #a8d8f0;
+  --ice-bright: #e0f4ff;
+  --ice-dark: #4a9fc4;
+  --gold: #f0c060;
+  --gold-bright: #ffe080;
+  --fire: #ff6030;
+  --fire-bright: #ff9060;
+  --bg-deep: #0a0e1a;
+  --bg-mid: #111828;
+  --bg-panel: #161e30;
+  --bg-panel2: #1c2840;
+  --hp-red: #e03040;
+  --hp-green: #40c060;
+  --text-main: #d0e4f8;
+  --text-dim: #6080a0;
+  --border: #2a3a58;
+  --wave-dark: #080c14;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-main);
+  font-family: 'Crimson Text', serif;
+  font-size: 15px;
+  overflow: hidden;
+  user-select: none;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+}
+
+/* ── TITLE SCREEN ── */
+#title-screen {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, #0d1f3a 0%, #050a12 70%);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 1000;
+  gap: 20px;
+}
+#title-screen h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(32px, 6vw, 72px);
+  font-weight: 900;
+  color: var(--ice-bright);
+  text-shadow: 0 0 30px var(--ice), 0 0 60px var(--ice-dark), 0 4px 8px #000;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+#title-screen .subtitle {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(11px, 2vw, 16px);
+  color: var(--ice);
+  letter-spacing: 0.3em;
+  opacity: 0.8;
+}
+.title-btn {
+  margin-top: 20px;
+  padding: 14px 48px;
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--bg-deep);
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
+  border: none; border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(240,192,96,0.5);
+  transition: all 0.2s;
+  letter-spacing: 0.1em;
+}
+.title-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(240,192,96,0.8); }
+
+.snowflakes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sf {
+  position: absolute;
+  color: rgba(168,216,240,0.6);
+  animation: sffall linear infinite;
+  font-size: 16px;
+}
+@keyframes sffall {
+  from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  to { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
+}
+
+/* ── TOP BAR ── */
+#topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 6px 12px;
+  background: linear-gradient(90deg, var(--bg-panel) 0%, var(--bg-panel2) 100%);
+  border-bottom: 2px solid var(--border);
+  flex-shrink: 0;
+  min-height: 44px;
+}
+.stat-box {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--wave-dark);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 13px;
+}
+.stat-icon { font-size: 16px; }
+.stat-val { font-weight: 600; color: var(--gold); font-family: 'Cinzel', serif; }
+.stat-label { color: var(--text-dim); font-size: 11px; }
+
+#castle-hp-bar-wrap {
+  flex: 1; max-width: 200px;
+  display: flex; flex-direction: column; gap: 2px;
+}
+.bar-track {
+  height: 10px; background: #0a1020; border-radius: 3px;
+  border: 1px solid var(--border); overflow: hidden;
+}
+.bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
+.bar-fill.hp { background: linear-gradient(90deg, var(--hp-green), #60e080); }
+.bar-fill.hp.low { background: linear-gradient(90deg, #c02020, var(--hp-red)); }
+
+#wave-info {
+  font-family: 'Cinzel', serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--ice-bright);
+  text-shadow: 0 0 10px var(--ice);
+  margin-left: auto;
+}
+
+#btn-wave {
+  padding: 6px 18px;
+  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
+  background: linear-gradient(135deg, #2a6040, #3a8050);
+  color: #a0ffc0; border: 1px solid #3a8050; border-radius: 4px;
+  cursor: pointer; transition: all 0.2s;
+}
+#btn-wave:hover { background: linear-gradient(135deg, #3a8050, #50a060); }
+#btn-wave:disabled { opacity: 0.4; cursor: not-allowed; }
+#btn-wave.danger { background: linear-gradient(135deg, #602020, #802030); color: #ffa0a0; border-color: #802030; }
+
+/* ── MAIN AREA ── */
+#main-area {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── GAME CANVAS ── */
+#canvas-wrap {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: #070d18;
+}
+canvas#game {
+  display: block;
+  cursor: crosshair;
+}
+#canvas-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+}
+.dmg-float {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  font-size: 13px; font-weight: 700;
+  pointer-events: none;
+  animation: floatup 0.9s ease-out forwards;
+  text-shadow: 0 1px 3px #000;
+  white-space: nowrap;
+}
+@keyframes floatup {
+  from { transform: translateY(0); opacity: 1; }
+  to   { transform: translateY(-36px); opacity: 0; }
+}
+
+/* ── RIGHT PANEL ── */
+#right-panel {
+  width: 220px; min-width: 220px;
+  background: var(--bg-panel);
+  border-left: 2px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.panel-section {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.panel-title {
+  font-family: 'Cinzel', serif;
+  font-size: 11px; font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* Turret buttons */
+.turret-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px;
+}
+.turret-btn {
+  position: relative;
+  padding: 7px 4px;
+  background: var(--bg-panel2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  color: var(--text-main);
+}
+.turret-btn:hover { border-color: var(--ice); background: #1e2e48; }
+.turret-btn.selected { border-color: var(--gold); background: #2a2010; box-shadow: inset 0 0 8px rgba(240,192,96,0.2); }
+.turret-btn.no-money { opacity: 0.4; cursor: not-allowed; }
+.turret-btn .t-icon { font-size: 20px; display: block; }
+.turret-btn .t-name { font-size: 10px; color: var(--text-dim); display: block; margin-top: 2px; font-family:'Crimson Text',serif; }
+.turret-btn .t-cost { font-size: 11px; color: var(--gold); font-family:'Cinzel',serif; font-weight:700; }
+
+/* Trap buttons */
+.trap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+.trap-btn {
+  padding: 6px 4px;
+  background: var(--bg-panel2);
+  border: 1px solid var(--border); border-radius: 4px;
+  cursor: pointer; text-align: center; transition: all 0.15s;
+  color: var(--text-main);
+}
+.trap-btn:hover { border-color: #7060a0; background: #1a1830; }
+.trap-btn.selected { border-color: #a080e0; background: #1a1030; }
+.trap-btn .t-icon { font-size: 18px; display: block; }
+
+#sel-info {
+  font-size: 12px; line-height: 1.6;
+}
+#sel-repair-btn {
+  margin-top: 6px; width: 100%; padding: 6px;
+  font-family:'Cinzel',serif; font-size:12px; font-weight:700;
+  background: linear-gradient(135deg, #4a2010, #6a3010);
+  color: #ffb060; border: 1px solid #8a5020; border-radius: 4px;
+  cursor: pointer; transition: all 0.2s;
+}
+#sel-repair-btn:hover { background: linear-gradient(135deg, #6a3010, #8a4010); }
+#sel-sell-btn {
+  margin-top: 4px; width: 100%; padding: 5px;
+  font-family:'Cinzel',serif; font-size:11px; font-weight:700;
+  background: transparent;
+  color: var(--hp-red); border: 1px solid #602020; border-radius: 4px;
+  cursor: pointer; transition: all 0.2s;
+}
+
+/* Upgrade buttons */
+.upgrade-btn {
+  width: 100%; padding: 8px; margin-bottom: 4px;
+  background: var(--bg-panel2); border: 1px solid var(--border);
+  color: var(--text-main); cursor: pointer; text-align: left;
+  font-size: 11px; border-radius: 4px;
+}
+.upgrade-btn:hover { background: #253550; }
+.upgrade-btn.max { opacity: 0.5; cursor: default; border-color: var(--gold); }
+
+/* ── BOTTOM BAR ── */
+#bottombar {
+  height: 28px; padding: 0 10px;
+  background: var(--wave-dark);
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 11px; color: var(--text-dim);
+  flex-shrink: 0;
+}
+#msg-log { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ── OVERLAY ── */
+#overlay-screen {
+  display: none;
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(5,10,20,0.92);
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px;
+}
+#overlay-screen.show { display: flex; }
+#overlay-screen h2.lose { color: var(--hp-red); }
+#overlay-screen h2.win { color: var(--gold-bright); }
+.overlay-btn {
+  padding: 12px 40px; font-family: 'Cinzel'; background: #3a5080; color: white; border: none; cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div id="title-screen">
+  <div class="snowflakes" id="title-snow"></div>
+  <div class="subtitle">⚔ FROZEN LEGACY ⚔</div>
+  <h1>프로즌 레거시</h1>
+  <div style="font-size:14px;color:var(--text-dim);text-align:center;max-width:400px;line-height:1.8">
+    100웨이브 동안 성을 지켜라<br>
+    최종 보스 <span style="color:var(--fire-bright)">고대 얼음 드래곤</span>을 처치하라!
+  </div>
+  <button class="title-btn" onclick="startGame()">🏰 게임 시작</button>
+</div>
+
+<div id="app" style="display:none">
+  <div id="topbar">
+    <div class="stat-box">💰 <span class="stat-val" id="stat-gold">500</span></div>
+    <div class="stat-box">🧱 <span class="stat-val" id="stat-steel">0</span></div>
+    <div class="stat-box">💎 <span class="stat-val" id="stat-core">0</span></div>
+    <div id="castle-hp-bar-wrap">
+      <div style="display:flex;justify-content:space-between;font-size:10px">
+        <span>CASTLE HP</span><span id="castle-hp-text">100%</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill hp" id="castle-hp-bar" style="width:100%"></div></div>
+    </div>
+    <div id="wave-info">WAVE <span id="wave-num">0</span> / 100</div>
+    <button id="speed-btn" onclick="toggleSpeed()">⏩ 1×</button>
+    <button id="btn-wave" onclick="startWave()">▶ 웨이브 시작</button>
+  </div>
+
+  <div id="main-area">
+    <div id="canvas-wrap">
+      <canvas id="game"></canvas>
+      <div id="canvas-overlay"></div>
+    </div>
+
+    <div id="right-panel">
+      <div class="panel-section">
+        <div class="panel-title">🗼 터렛 배치</div>
+        <div class="turret-grid" id="turret-grid"></div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-title">🪤 함정 배치</div>
+        <div class="trap-grid" id="trap-grid"></div>
+      </div>
+      <div class="panel-section" id="sel-section" style="display:none">
+        <div class="panel-title">🔧 선택됨</div>
+        <div id="sel-info"></div>
+        <button id="sel-repair-btn" onclick="repairSelected()">🔨 수리하기</button>
+        <button id="sel-sell-btn" onclick="sellSelected()">💸 철거</button>
+      </div>
+      <div class="panel-section">
+        <div class="panel-title">⚗️ 업그레이드 (고대핵)</div>
+        <div id="upgrade-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="bottombar">
+    <div id="msg-log">터렛을 배치하고 웨이브를 시작하세요.</div>
+  </div>
+</div>
+
+<div id="overlay-screen">
+  <h2 id="overlay-title">GAME OVER</h2>
+  <p id="overlay-msg"></p>
+  <button class="overlay-btn" onclick="location.reload()">🔄 다시 시작</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// FROZEN LEGACY — Core Engine
+// ═══════════════════════════════════════════════════════════
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const canvasWrap = document.getElementById('canvas-wrap');
+
+function resizeCanvas() {
+  const r = canvasWrap.getBoundingClientRect();
+  canvas.width = r.width;
+  canvas.height = r.height;
+}
+resizeCanvas();
+
+const G = {
+  running: false, waveActive: false, gameOver: false,
+  wave: 0, speed: 1, gold: 500, steel: 0, core: 0,
+  castleHp: 1000, castleMaxHp: 1000,
+  selected: null, // {type, id, c, r}
+  turrets: [], enemies: [], traps: [], effects: [], mines: [],
+  upgrades: { maxDurability: 0, repairCost: 0, mineChain: 0 },
+  blizzard: false, frozenTiles: false
+};
+
+let COLS, ROWS, CELL;
+let grid = []; // 0:empty, 1:path, 2:castle, 3:turret
+let path = [];
+
+function buildGrid() {
+  resizeCanvas();
+  CELL = 50;
+  COLS = Math.floor(canvas.width / CELL);
+  ROWS = Math.floor(canvas.height / CELL);
+  grid = Array.from({length: ROWS}, () => Array(COLS).fill(0));
+  
+  // 간단한 S자 경로 생성
+  path = [];
+  let r = Math.floor(ROWS/4), c = 0;
+  while(c < COLS * 0.7) { grid[r][c]=1; path.push({c,r}); c++; }
+  while(r < ROWS * 0.7) { grid[r][c]=1; path.push({c,r}); r++; }
+  while(c < COLS - 2) { grid[r][c]=1; path.push({c,r}); c++; }
+  
+  // 성 위치
+  grid[r][c] = 2; grid[r-1][c] = 2; grid[r][c+1] = 2; grid[r-1][c+1] = 2;
+}
+
+const TURRET_DEFS = [
+  { id: 'arrow', name: '화살탑', icon: '🏹', cost: 80, dmg: 25, rate: 1.2, range: 4, durMax: 100, color: '#8060c0' },
+  { id: 'gatling', name: '기관총', icon: '🔫', cost: 120, dmg: 12, rate: 3.5, range: 3, durMax: 80, color: '#708090' },
+  { id: 'sniper', name: '저격수', icon: '🎯', cost: 150, dmg: 80, rate: 0.5, range: 7, durMax: 90, color: '#204060' },
+  { id: 'flame', name: '화염방사', icon: '🔥', cost: 160, dmg: 35, rate: 2, range: 2.5, durMax: 70, color: '#a03010', isFire: true }
+];
+
+const TRAP_DEFS = [
+  { id: 'sticky', name: '점착늪', icon: '🟫', cost: 40, slow: 0.5 },
+  { id: 'mine', name: '마력지뢰', icon: '💣', cost: 100, dmg: 300, range: 2 }
+];
+
+const ENEMY_TYPES = {
+  goblin: { name:'고블린', icon:'👺', hp:60, spd:1.2, reward:10 },
+  orc: { name:'오크', icon:'👹', hp:200, spd:0.8, reward:25 },
+  ice_wolf: { name:'얼음늑대', icon:'🐺', hp:150, spd:1.8, reward:30, ice:true },
+  ancient: { name:'고대룡', icon:'🐉', hp:15000, spd:0.6, reward:1000, boss:true, ice:true }
+};
+
+const UPGRADE_DEFS = [
+  { id:'maxDurability', name:'내구도 강화', cost:1, desc:'터렛 체력 +20%' },
+  { id:'mineChain', name:'지뢰 강화', cost:1, desc:'지뢰 범위 +20%' }
+];
+
+// ═══════════════════════════════════════════════════════════
+// GAME LOGIC
+// ═══════════════════════════════════════════════════════════
+
+function startGame() {
+  document.getElementById('title-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  buildGrid();
+  renderUI();
+  G.running = true;
+  requestAnimationFrame(gameLoop);
+}
+
+function startWave() {
+  if (G.waveActive) return;
+  G.wave++;
+  G.waveActive = true;
+  G.blizzard = G.wave >= 70;
+  
+  let count = 5 + G.wave * 2;
+  let spawned = 0;
+  let interval = setInterval(() => {
+    let type = 'goblin';
+    if (G.wave > 5 && Math.random() > 0.7) type = 'orc';
+    if (G.wave > 20 && Math.random() > 0.8) type = 'ice_wolf';
+    if (G.wave === 100 && spawned === 0) type = 'ancient';
+    
+    spawnEnemy(type);
+    spawned++;
+    if (spawned >= count) {
+      clearInterval(interval);
+    }
+  }, 1000 / G.speed);
+}
+
+function spawnEnemy(typeId) {
+  const def = ENEMY_TYPES[typeId];
+  const hp = def.hp * (1 + G.wave * 0.1);
+  G.enemies.push({
+    ...def, hp, maxHp: hp, 
+    x: path[0].c * CELL + CELL/2, y: path[0].r * CELL + CELL/2,
+    pathIdx: 0, slowTimer: 0, dead: false
+  });
+}
+
+function update(dt) {
+  if (!G.running || G.gameOver) return;
+
+  // Enemies
+  G.enemies.forEach(e => {
+    if (e.dead) return;
+    let speed = e.spd * CELL * dt;
+    if (e.slowTimer > 0) { speed *= 0.5; e.slowTimer -= dt; }
+    
+    let target = path[e.pathIdx + 1];
+    if (!target) { // Reach Castle
+      G.castleHp -= e.boss ? 500 : 50;
+      e.dead = true;
+      updateCastleUI();
+      if (G.castleHp <= 0) endGame(false);
+      return;
+    }
+    
+    let tx = target.c * CELL + CELL/2, ty = target.r * CELL + CELL/2;
+    let dx = tx - e.x, dy = ty - e.y;
+    let dist = Math.hypot(dx, dy);
+    
+    if (dist < speed) {
+      e.x = tx; e.y = ty; e.pathIdx++;
+      checkTraps(e);
+    } else {
+      e.x += (dx/dist) * speed;
+      e.y += (dy/dist) * speed;
+    }
+  });
+  G.enemies = G.enemies.filter(e => !e.dead);
+
+  // Turrets
+  G.turrets.forEach(t => {
+    if (t.durability <= 0) return;
+    t.cooldown -= dt;
+    
+    // 블리자드 내구도 감소
+    if (G.blizzard) t.durability -= dt * 0.5;
+
+    if (t.cooldown <= 0) {
+      let target = G.enemies.find(e => Math.hypot(e.x - (t.c*CELL + CELL/2), e.y - (t.r*CELL + CELL/2)) < t.range * CELL);
+      if (target) {
+        t.cooldown = 1 / t.rate;
+        let dmg = t.dmg;
+        if (t.isFire && target.ice) dmg *= 2;
+        target.hp -= dmg;
+        t.durability -= 0.2;
+        showDmg(target.x, target.y, Math.round(dmg), t.color);
+        if (target.hp <= 0) {
+          target.dead = true;
+          G.gold += target.reward;
+          if (target.boss) { G.core += 2; endGame(true); }
+          updateUI();
+        }
+      }
+    }
+  });
+
+  if (G.waveActive && G.enemies.length === 0) {
+    G.waveActive = false;
+    log(`웨이브 ${G.wave} 방어 성공!`, 'good');
+  }
+}
+
+function checkTraps(e) {
+  G.traps.forEach((t, idx) => {
+    if (t.c === Math.floor(e.x/CELL) && t.r === Math.floor(e.y/CELL)) {
+      if (t.id === 'sticky') e.slowTimer = 2;
+      if (t.id === 'mine') {
+        explodeMine(t);
+        G.traps.splice(idx, 1);
+      }
+    }
+  });
+}
+
+function explodeMine(mine) {
+  let range = mine.range * CELL * (1 + G.upgrades.mineChain * 0.2);
+  G.enemies.forEach(e => {
+    let d = Math.hypot(e.x - (mine.c*CELL+CELL/2), e.y - (mine.r*CELL+CELL/2));
+    if (d < range) {
+      e.hp -= mine.dmg;
+      if (e.hp <= 0) { e.dead = true; G.gold += e.reward; }
+    }
+  });
+  updateUI();
+}
+
+// ═══════════════════════════════════════════════════════════
+// RENDERING & UI
+// ═══════════════════════════════════════════════════════════
+
+function gameLoop(now) {
+  let dt = 0.016 * G.speed;
+  update(dt);
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Path
+  ctx.fillStyle = '#1a2538';
+  path.forEach(p => ctx.fillRect(p.c * CELL, p.r * CELL, CELL, CELL));
+  
+  // Castle
+  ctx.fillStyle = '#2a4a80';
+  for(let r=0; r<ROWS; r++) for(let c=0; c<COLS; c++) if(grid[r][c]===2) ctx.fillRect(c*CELL, r*CELL, CELL, CELL);
+
+  // Traps
+  G.traps.forEach(t => {
+    ctx.font = '20px Arial';
+    ctx.fillText(TRAP_DEFS.find(d=>d.id===t.id).icon, t.c*CELL+12, t.r*CELL+32);
+  });
+
+  // Enemies
+  G.enemies.forEach(e => {
+    ctx.font = '24px Arial';
+    ctx.fillText(e.icon, e.x - 12, e.y + 10);
+    // HP Bar
+    ctx.fillStyle = 'red'; ctx.fillRect(e.x-15, e.y-20, 30, 3);
+    ctx.fillStyle = 'lime'; ctx.fillRect(e.x-15, e.y-20, (e.hp/e.maxHp)*30, 3);
+  });
+
+  // Turrets
+  G.turrets.forEach(t => {
+    ctx.font = '30px Arial';
+    ctx.fillText(TURRET_DEFS.find(d=>d.id===t.defId).icon, t.c*CELL+10, t.r*CELL+38);
+    // Durability
+    ctx.fillStyle = '#444'; ctx.fillRect(t.c*CELL+5, t.r*CELL+5, CELL-10, 3);
+    ctx.fillStyle = t.durability < 30 ? 'orange' : 'cyan';
+    ctx.fillRect(t.c*CELL+5, t.r*CELL+5, (t.durability/t.durMax)*(CELL-10), 3);
+  });
+  
+  // Blizzard overlay
+  if (G.blizzard) {
+    ctx.fillStyle = 'rgba(200, 230, 255, 0.15)';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INPUT & UI HELPERS
+// ═══════════════════════════════════════════════════════════
+
+canvas.addEventListener('mousedown', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const c = Math.floor((e.clientX - rect.left) / CELL);
+  const r = Math.floor((e.clientY - rect.top) / CELL);
+  
+  if (G.selected && G.selected.type === 'build') {
+    if (grid[r][c] === 0) {
+      const def = TURRET_DEFS.find(d => d.id === G.selected.id);
+      if (G.gold >= def.cost) {
+        G.gold -= def.cost;
+        G.turrets.push({ ...def, defId: def.id, c, r, durability: def.durMax, cooldown: 0 });
+        grid[r][c] = 3;
+        updateUI();
+      } else log('골드가 부족합니다!', 'warn');
+    } else if (grid[r][c] === 1 && G.selected.isTrap) {
+      const def = TRAP_DEFS.find(d => d.id === G.selected.id);
+      if (G.gold >= def.cost) {
+        G.gold -= def.cost;
+        G.traps.push({ ...def, c, r });
+        updateUI();
+      }
+    }
+  } else {
+    // Select turret
+    const t = G.turrets.find(t => t.c === c && t.r === r);
+    if (t) {
+      G.selected = { type: 'turret', ...t };
+      showSelectionInfo(t);
+    } else {
+      G.selected = null;
+      document.getElementById('sel-section').style.display = 'none';
+    }
+  }
+});
+
+function renderUI() {
+  const tg = document.getElementById('turret-grid');
+  TURRET_DEFS.forEach(d => {
+    const b = document.createElement('div');
+    b.className = 'turret-btn';
+    b.innerHTML = `<span class="t-icon">${d.icon}</span><span class="t-name">${d.name}</span><span class="t-cost">${d.cost}</span>`;
+    b.onclick = () => G.selected = { type: 'build', id: d.id };
+    tg.appendChild(b);
+  });
+  
+  const trg = document.getElementById('trap-grid');
+  TRAP_DEFS.forEach(d => {
+    const b = document.createElement('div');
+    b.className = 'trap-btn';
+    b.innerHTML = `<span class="t-icon">${d.icon}</span><span class="t-cost">${d.cost}</span>`;
+    b.onclick = () => G.selected = { type: 'build', id: d.id, isTrap: true };
+    trg.appendChild(b);
+  });
+
+  const upg = document.getElementById('upgrade-list');
+  UPGRADE_DEFS.forEach(d => {
+    const b = document.createElement('button');
+    b.className = 'upgrade-btn';
+    b.innerHTML = `<b>${d.name}</b><br>${d.desc} (💎${d.cost})`;
+    b.onclick = () => buyUpgrade(d.id, d.cost);
+    upg.appendChild(b);
+  });
+}
+
+function buyUpgrade(id, cost) {
+  if (G.core >= cost) {
+    G.core -= cost;
+    G.upgrades[id]++;
+    log('연구 완료!', 'good');
+    updateUI();
+  } else log('고대핵이 부족합니다!', 'warn');
+}
+
+function showSelectionInfo(t) {
+  const s = document.getElementById('sel-section');
+  s.style.display = 'block';
+  document.getElementById('sel-info').innerHTML = `
+    <b>${t.name}</b><br>
+    내구도: ${Math.round(t.durability)}/${t.durMax}<br>
+    수리비: ${Math.round((t.durMax - t.durability) * 0.5)} 골드
+  `;
+}
+
+function repairSelected() {
+  if (G.selected && G.selected.type === 'turret') {
+    const t = G.turrets.find(tt => tt.c === G.selected.c && tt.r === G.selected.r);
+    const cost = Math.round((t.durMax - t.durability) * 0.5);
+    if (G.gold >= cost) {
+      G.gold -= cost;
+      t.durability = t.durMax;
+      showSelectionInfo(t);
+      updateUI();
+    }
+  }
+}
+
+function sellSelected() {
+  if (G.selected && G.selected.type === 'turret') {
+    const idx = G.turrets.findIndex(tt => tt.c === G.selected.c && tt.r === G.selected.r);
+    G.gold += G.turrets[idx].cost / 2;
+    grid[G.selected.r][G.selected.c] = 0;
+    G.turrets.splice(idx, 1);
+    G.selected = null;
+    document.getElementById('sel-section').style.display = 'none';
+    updateUI();
+  }
+}
+
+function updateUI() {
+  document.getElementById('stat-gold').innerText = Math.floor(G.gold);
+  document.getElementById('stat-steel').innerText = G.steel;
+  document.getElementById('stat-core').innerText = G.core;
+  document.getElementById('wave-num').innerText = G.wave;
+}
+
+function updateCastleUI() {
+  const p = (G.castleHp / G.castleMaxHp) * 100;
+  document.getElementById('castle-hp-bar').style.width = p + '%';
+  document.getElementById('castle-hp-text').innerText = Math.max(0, Math.round(p)) + '%';
+}
+
+function toggleSpeed() {
+  G.speed = G.speed === 1 ? 2 : 1;
+  document.getElementById('speed-btn').innerText = `⏩ ${G.speed}×`;
+}
+
+function log(m, type) {
+  const l = document.getElementById('msg-log');
+  l.innerText = m;
+  l.style.color = type === 'warn' ? '#ff6060' : '#60ff60';
+}
+
+function showDmg(x, y, amt, color) {
+  const d = document.createElement('div');
+  d.className = 'dmg-float';
+  d.style.left = x + 'px'; d.style.top = y + 'px'; d.style.color = color;
+  d.innerText = amt;
+  document.getElementById('canvas-overlay').appendChild(d);
+  setTimeout(() => d.remove(), 800);
+}
+
+function endGame(win) {
+  G.running = false;
+  const s = document.getElementById('overlay-screen');
+  s.classList.add('show');
+  document.getElementById('overlay-title').innerText = win ? "VICTORY" : "GAME OVER";
+  document.getElementById('overlay-title').className = win ? "win" : "lose";
+  document.getElementById('overlay-msg').innerText = win ? "고대룡을 물리치고 왕국을 구했습니다!" : "성이 함락되었습니다...";
+}
+
+</script>
+</body>
+</html>
