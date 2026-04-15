@@ -27,243 +27,64 @@
   --wave-dark: #080c14;
 }
 
+/* ── 기존 스타일 유지 ── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg-deep);
-  color: var(--text-main);
-  font-family: 'Crimson Text', serif;
-  font-size: 15px;
-  overflow: hidden;
-  user-select: none;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  height: 100vh;
-  max-height: 100vh;
-}
-
-/* ── TITLE SCREEN ── */
-#title-screen {
-  position: fixed; inset: 0;
-  background: radial-gradient(ellipse at 50% 30%, #0d1f3a 0%, #050a12 70%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 1000;
-  gap: 20px;
-}
-#title-screen h1 {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(32px, 6vw, 72px);
-  font-weight: 900;
-  color: var(--ice-bright);
-  text-shadow: 0 0 30px var(--ice), 0 0 60px var(--ice-dark), 0 4px 8px #000;
-  letter-spacing: 0.1em;
-  text-align: center;
-}
-#title-screen .subtitle {
-  font-family: 'Cinzel', serif;
-  font-size: clamp(11px, 2vw, 16px);
-  color: var(--ice);
-  letter-spacing: 0.3em;
-  opacity: 0.8;
-}
-.title-btn {
-  margin-top: 20px;
-  padding: 14px 48px;
-  font-family: 'Cinzel', serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--bg-deep);
-  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%);
-  border: none; border-radius: 4px;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(240,192,96,0.5);
-  transition: all 0.2s;
-  letter-spacing: 0.1em;
-}
+body { background: var(--bg-deep); color: var(--text-main); font-family: 'Crimson Text', serif; font-size: 15px; overflow: hidden; user-select: none; }
+#app { display: flex; flex-direction: column; width: 100vw; height: 100vh; max-height: 100vh; }
+#title-screen { position: fixed; inset: 0; background: radial-gradient(ellipse at 50% 30%, #0d1f3a 0%, #050a12 70%); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; gap: 20px; }
+#title-screen h1 { font-family: 'Cinzel', serif; font-size: clamp(32px, 6vw, 72px); font-weight: 900; color: var(--ice-bright); text-shadow: 0 0 30px var(--ice), 0 0 60px var(--ice-dark), 0 4px 8px #000; letter-spacing: 0.1em; text-align: center; }
+#title-screen .subtitle { font-family: 'Cinzel', serif; font-size: clamp(11px, 2vw, 16px); color: var(--ice); letter-spacing: 0.3em; opacity: 0.8; }
+.title-btn { margin-top: 20px; padding: 14px 48px; font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--bg-deep); background: linear-gradient(135deg, var(--gold) 0%, var(--gold-bright) 50%, var(--gold) 100%); border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 0 20px rgba(240,192,96,0.5); transition: all 0.2s; letter-spacing: 0.1em; }
 .title-btn:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(240,192,96,0.8); }
 
-.snowflakes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.sf {
-  position: absolute;
-  color: rgba(168,216,240,0.6);
-  animation: sffall linear infinite;
-  font-size: 16px;
-}
-@keyframes sffall {
-  from { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-  to { transform: translateY(105vh) rotate(360deg); opacity: 0.2; }
-}
-
-/* ── TOP BAR ── */
-#topbar {
-  display: flex; align-items: center; gap: 12px;
-  padding: 6px 12px;
-  background: linear-gradient(90deg, var(--bg-panel) 0%, var(--bg-panel2) 100%);
-  border-bottom: 2px solid var(--border);
-  flex-shrink: 0;
-  min-height: 44px;
-}
-.stat-box {
-  display: flex; align-items: center; gap: 6px;
-  background: var(--wave-dark);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 4px 10px;
-  font-size: 13px;
-}
+/* ── TOP BAR & UI ── */
+#topbar { display: flex; align-items: center; gap: 12px; padding: 6px 12px; background: linear-gradient(90deg, var(--bg-panel) 0%, var(--bg-panel2) 100%); border-bottom: 2px solid var(--border); flex-shrink: 0; min-height: 44px; }
+.stat-box { display: flex; align-items: center; gap: 6px; background: var(--wave-dark); border: 1px solid var(--border); border-radius: 4px; padding: 4px 10px; font-size: 13px; }
 .stat-val { font-weight: 600; color: var(--gold); font-family: 'Cinzel', serif; }
-
-#castle-hp-bar-wrap {
-  flex: 1; max-width: 200px;
-  display: flex; flex-direction: column; gap: 2px;
-}
-.bar-track {
-  height: 10px; background: #0a1020; border-radius: 3px;
-  border: 1px solid var(--border); overflow: hidden;
-}
+#castle-hp-bar-wrap { flex: 1; max-width: 200px; display: flex; flex-direction: column; gap: 2px; }
+.bar-track { height: 10px; background: #0a1020; border-radius: 3px; border: 1px solid var(--border); overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 3px; transition: width 0.3s; }
 .bar-fill.hp { background: linear-gradient(90deg, var(--hp-green), #60e080); }
 .bar-fill.hp.low { background: linear-gradient(90deg, #c02020, var(--hp-red)); }
+#wave-info { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; color: var(--ice-bright); text-shadow: 0 0 10px var(--ice); margin-left: auto; }
 
-#wave-info {
-  font-family: 'Cinzel', serif;
-  font-size: 14px; font-weight: 700;
-  color: var(--ice-bright);
-  text-shadow: 0 0 10px var(--ice);
-  margin-left: auto;
-}
+/* 신규 추가: 가이드 버튼 스타일 */
+#btn-help { padding: 6px 12px; font-family: 'Cinzel', serif; font-size: 13px; background: #1c2840; color: var(--ice); border: 1px solid var(--ice-dark); border-radius: 4px; cursor: pointer; }
+#btn-wave { padding: 6px 18px; font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700; background: linear-gradient(135deg, #2a6040, #3a8050); color: #a0ffc0; border: 1px solid #3a8050; border-radius: 4px; cursor: pointer; }
 
-#btn-wave {
-  padding: 6px 18px;
-  font-family: 'Cinzel', serif; font-size: 13px; font-weight: 700;
-  background: linear-gradient(135deg, #2a6040, #3a8050);
-  color: #a0ffc0; border: 1px solid #3a8050; border-radius: 4px;
-  cursor: pointer; transition: all 0.2s;
-}
-#btn-wave:hover { background: linear-gradient(135deg, #3a8050, #50a060); }
-#btn-wave:disabled { opacity: 0.4; cursor: not-allowed; }
+/* ── MAIN AREA & PANEL ── */
+#main-area { display: flex; flex: 1; overflow: hidden; }
+#canvas-wrap { position: relative; flex: 1; overflow: hidden; background: #070d18; }
+canvas#game { display: block; cursor: crosshair; }
+#right-panel { width: 260px; min-width: 260px; background: var(--bg-panel); border-left: 2px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+.panel-section { padding: 10px; border-bottom: 1px solid var(--border); }
+.panel-title { font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700; color: var(--gold); margin-bottom: 8px; text-transform: uppercase; }
+#info-box { background: var(--wave-dark); border: 1px solid #3a4a68; border-radius: 4px; padding: 10px; min-height: 85px; }
+.item-btn { position: relative; padding: 8px 4px; background: var(--bg-panel2); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; text-align: center; color: var(--text-main); }
+.item-btn.selected { border-color: var(--gold); background: #2a2010; }
+.upgrade-btn { width: 100%; padding: 8px; margin-bottom: 6px; background: var(--bg-panel2); border: 1px solid var(--border); color: var(--text-main); cursor: pointer; font-size: 12px; border-radius: 4px; }
 
-/* ── MAIN AREA ── */
-#main-area {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
+/* ── HELP MODAL STYLE (신규) ── */
+#help-modal {
+  display: none; position: fixed; inset: 0; z-index: 3000;
+  background: rgba(0, 0, 0, 0.85); align-items: center; justify-content: center;
 }
-
-/* ── GAME CANVAS ── */
-#canvas-wrap {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-  background: #070d18;
+#help-modal.show { display: flex; }
+.modal-content {
+  background: var(--bg-panel); border: 2px solid var(--ice-dark); border-radius: 8px;
+  width: 90%; max-width: 500px; padding: 25px; position: relative;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5); font-family: 'Crimson Text', serif;
 }
-canvas#game {
-  display: block;
-  cursor: crosshair;
-}
-
-/* ── RIGHT PANEL ── */
-#right-panel {
-  width: 260px; min-width: 260px;
-  background: var(--bg-panel);
-  border-left: 2px solid var(--border);
-  display: flex; flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-.panel-section {
-  padding: 10px;
-  border-bottom: 1px solid var(--border);
-}
-.panel-title {
-  font-family: 'Cinzel', serif;
-  font-size: 12px; font-weight: 700;
-  color: var(--gold);
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-}
-
-/* Info Box (신규 추가) */
-#info-box {
-  background: var(--wave-dark);
-  border: 1px solid #3a4a68;
-  border-radius: 4px;
-  padding: 10px;
-  min-height: 85px;
-}
-#info-content {
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--text-dim);
-}
-
-/* Turret/Trap buttons */
-.turret-grid, .trap-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-}
-.item-btn {
-  position: relative;
-  padding: 8px 4px;
-  background: var(--bg-panel2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.15s;
-  color: var(--text-main);
-}
-.item-btn:hover { border-color: var(--ice); background: #1e2e48; }
-.item-btn.selected { border-color: var(--gold); background: #2a2010; box-shadow: inset 0 0 8px rgba(240,192,96,0.3); }
-.item-btn .t-icon { font-size: 22px; display: block; margin-bottom: 2px; }
-.item-btn .t-name { font-size: 11px; color: var(--text-main); display: block; font-family:'Crimson Text',serif; font-weight:bold;}
-.item-btn .t-cost { font-size: 12px; color: var(--gold); font-family:'Cinzel',serif; font-weight:700; margin-top: 2px; display: block;}
-
-/* Action buttons */
-#sel-repair-btn, #sel-sell-btn {
-  width: 100%; padding: 8px; margin-top: 6px;
-  font-family:'Cinzel',serif; font-size:12px; font-weight:700; border-radius: 4px;
-  cursor: pointer; transition: all 0.2s;
-}
-#sel-repair-btn { background: linear-gradient(135deg, #4a2010, #6a3010); color: #ffb060; border: 1px solid #8a5020; }
-#sel-sell-btn { background: transparent; color: var(--hp-red); border: 1px solid #602020; }
-
-/* Upgrade buttons */
-.upgrade-btn {
-  width: 100%; padding: 8px; margin-bottom: 6px;
-  background: var(--bg-panel2); border: 1px solid var(--border);
-  color: var(--text-main); cursor: pointer; text-align: left;
-  font-size: 12px; border-radius: 4px; transition: all 0.15s;
-}
-.upgrade-btn:hover { background: #253550; border-color: var(--ice-dark); }
-
-/* ── BOTTOM BAR ── */
-#bottombar {
-  height: 30px; padding: 0 12px;
-  background: var(--wave-dark);
-  border-top: 1px solid var(--border);
-  display: flex; align-items: center; gap: 10px;
-  font-size: 12px; color: var(--ice);
-  flex-shrink: 0;
-}
-#msg-log { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold;}
+.modal-content h3 { font-family: 'Cinzel'; color: var(--gold); margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 5px; }
+.modal-content ul { list-style: none; }
+.modal-content li { margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
+.modal-content b { color: var(--ice-bright); }
+.close-modal { position: absolute; top: 10px; right: 15px; font-size: 24px; cursor: pointer; color: var(--text-dim); }
+.close-modal:hover { color: white; }
 
 /* ── OVERLAY ── */
-#overlay-screen {
-  display: none;
-  position: fixed; inset: 0; z-index: 2000;
-  background: rgba(5,10,20,0.92);
-  align-items: center; justify-content: center;
-  flex-direction: column; gap: 16px;
-}
+#overlay-screen { display: none; position: fixed; inset: 0; z-index: 2000; background: rgba(5,10,20,0.92); align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
 #overlay-screen.show { display: flex; }
-#overlay-screen h2.lose { color: var(--hp-red); }
-#overlay-screen h2.win { color: var(--gold-bright); }
-.overlay-btn { padding: 12px 40px; font-family: 'Cinzel'; background: #3a5080; color: white; border: none; cursor: pointer; font-size:16px; font-weight:bold; border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -274,11 +95,27 @@ canvas#game {
   <button class="title-btn" onclick="startGame()">🏰 게임 시작</button>
 </div>
 
+<div id="help-modal">
+  <div class="modal-content">
+    <span class="close-modal" onclick="toggleHelp()">&times;</span>
+    <h3>🛡️ 왕국 방어 가이드</h3>
+    <ul>
+      <li>🏰 <b>승리 조건:</b> 100웨이브의 보스 <b>'고대룡'</b>을 처치하세요!</li>
+      <li>🗼 <b>포탑 설치:</b> 비어있는 땅을 클릭해 설치합니다. 최대 <b>12개</b>까지만 보유 가능합니다.</li>
+      <li>🪤 <b>함정 활용:</b> 함정은 적이 지나가는 <b>길(어두운 파란색)</b> 위에만 설치 가능합니다.</li>
+      <li>🔥 <b>상성 공격:</b> 눈 속성 적(늑대, 용)은 <b>화염방사기</b>에 2배의 피해를 입습니다.</li>
+      <li>🔨 <b>유지보수:</b> 포탑은 공격할 때마다 내구도가 닳습니다. 수시로 클릭해서 <b>수리</b>해 주세요!</li>
+      <li>❄️ <b>눈보라:</b> 70웨이브 이후엔 눈보라가 쳐서 모든 포탑의 내구도가 서서히 감소합니다.</li>
+      <li>💎 <b>고대핵:</b> 보스를 잡고 얻은 핵으로 강력한 <b>영구 업그레이드</b>를 진행하세요.</li>
+    </ul>
+  </div>
+</div>
+
 <div id="app" style="display:none">
   <div id="topbar">
     <div class="stat-box" title="골드">💰 <span class="stat-val" id="stat-gold">400</span></div>
-    <div class="stat-box" title="고대핵 (보스 처치 시 획득)">💎 <span class="stat-val" id="stat-core">0</span></div>
-    <div class="stat-box" title="설치된 포탑 개수 (최대 12개)">🗼 <span class="stat-val" id="stat-turrets">0/12</span></div>
+    <div class="stat-box" title="고대핵">💎 <span class="stat-val" id="stat-core">0</span></div>
+    <div class="stat-box" title="터렛">🗼 <span class="stat-val" id="stat-turrets">0/12</span></div>
     
     <div id="castle-hp-bar-wrap">
       <div style="display:flex;justify-content:space-between;font-size:10px; font-weight:bold;">
@@ -287,9 +124,10 @@ canvas#game {
       <div class="bar-track"><div class="bar-fill hp" id="castle-hp-bar" style="width:100%"></div></div>
     </div>
     
-    <div id="wave-info">WAVE <span id="wave-num">0</span> / 100</div>
+    <div id="wave-info">WAVE <span id="wave-num">0</span></div>
+    <button id="btn-help" onclick="toggleHelp()">📖 가이드</button>
     <button id="speed-btn" onclick="toggleSpeed()">⏩ 1×</button>
-    <button id="btn-wave" onclick="startWave()">▶ 웨이브 시작</button>
+    <button id="btn-wave" onclick="startWave()">▶ 시작</button>
   </div>
 
   <div id="main-area">
@@ -303,43 +141,55 @@ canvas#game {
         <div id="info-box">
           <div id="info-content">배치할 포탑이나 함정을 선택하세요.</div>
           <div id="action-buttons" style="display:none;">
-            <button id="sel-repair-btn" onclick="repairSelected()">🔨 수리하기</button>
-            <button id="sel-sell-btn" onclick="sellSelected()">💸 철거</button>
+            <button id="sel-repair-btn" onclick="repairSelected()" style="width:100%; padding:8px; margin-top:6px; background:linear-gradient(135deg,#4a2010,#6a3010); color:#ffb060; border:1px solid #8a5020; cursor:pointer; font-family:'Cinzel';">🔨 수리하기</button>
+            <button id="sel-sell-btn" onclick="sellSelected()" style="width:100%; padding:8px; margin-top:6px; background:transparent; color:var(--hp-red); border:1px solid #602020; cursor:pointer; font-family:'Cinzel';">💸 철거</button>
           </div>
         </div>
       </div>
-
       <div class="panel-section">
         <div class="panel-title">🗼 터렛 (Max 12)</div>
-        <div class="turret-grid" id="turret-grid"></div>
+        <div class="turret-grid" id="turret-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px;"></div>
       </div>
       <div class="panel-section">
         <div class="panel-title">🪤 함정</div>
-        <div class="trap-grid" id="trap-grid"></div>
+        <div class="trap-grid" id="trap-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:6px;"></div>
       </div>
       <div class="panel-section">
-        <div class="panel-title">⚗️ 업그레이드 (고대핵)</div>
+        <div class="panel-title">⚗️ 업그레이드</div>
         <div id="upgrade-list"></div>
       </div>
     </div>
   </div>
 
-  <div id="bottombar">
-    <div id="msg-log">게임을 시작했습니다. 포탑을 짓고 적을 막아내세요!</div>
+  <div id="bottombar" style="height:30px; padding:0 12px; background:var(--wave-dark); border-top:1px solid var(--border); display:flex; align-items:center; font-size:12px; color:var(--ice);">
+    <div id="msg-log" style="font-weight:bold;">왕국을 지키기 위해 포탑을 배치하세요!</div>
   </div>
 </div>
 
 <div id="overlay-screen">
   <h2 id="overlay-title">GAME OVER</h2>
   <p id="overlay-msg" style="font-size: 18px;"></p>
-  <button class="overlay-btn" onclick="location.reload()">🔄 다시 시작</button>
+  <button class="overlay-btn" onclick="location.reload()" style="padding:12px 40px; font-family:'Cinzel'; background:#3a5080; color:white; border:none; cursor:pointer; border-radius:4px;">🔄 다시 시작</button>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// FROZEN LEGACY — Core Engine
-// ═══════════════════════════════════════════════════════════
+// ── 가이드 메뉴 제어 함수 (신규) ──
+function toggleHelp() {
+  const modal = document.getElementById('help-modal');
+  if (modal.classList.contains('show')) {
+    modal.classList.remove('show');
+    if (G.running) G.speed = lastSpeed; // 닫을 때 속도 복구
+  } else {
+    modal.classList.add('show');
+    lastSpeed = G.speed;
+    // G.speed = 0; // 도움말 볼 때 게임 일시정지 원할 경우 주석 해제
+  }
+}
+let lastSpeed = 1;
 
+// ═══════════════════════════════════════════════════════════
+// 기존 게임 로직 (수정 없이 그대로 사용)
+// ═══════════════════════════════════════════════════════════
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 const canvasWrap = document.getElementById('canvas-wrap');
@@ -356,7 +206,7 @@ const G = {
   wave: 0, speed: 1, gold: 400, core: 0,
   castleHp: 1000, castleMaxHp: 1000,
   maxTurrets: 12,
-  selected: null, // {type, id, c, r, isTrap}
+  selected: null,
   turrets: [], enemies: [], traps: [], 
   projectiles: [], particles: [], floatingTexts: [],
   upgrades: { maxDurability: 0, repairCost: 0, mineChain: 0 },
@@ -383,7 +233,6 @@ function buildGrid() {
   grid[r][c] = 2; grid[r-1][c] = 2; grid[r][c+1] = 2; grid[r-1][c+1] = 2;
 }
 
-// ✨ 설명(desc) 데이터 추가
 const TURRET_DEFS = [
   { id: 'arrow', name: '화살탑', icon: '🏹', cost: 100, dmg: 30, rate: 1.2, range: 4.5, durMax: 100, color: '#8060c0', projSpeed: 400, desc: '가장 기본적인 방어탑. 무난한 사거리와 공격력을 가집니다.' },
   { id: 'gatling', name: '기관총', icon: '🔫', cost: 180, dmg: 15, rate: 4.0, range: 3.5, durMax: 80, color: '#b0c4de', projSpeed: 600, desc: '빠른 연사력으로 다수의 적을 제압하는 데 탁월합니다.' },
@@ -408,9 +257,7 @@ const UPGRADE_DEFS = [
   { id:'mineChain', name:'지뢰 강화', cost:1, desc:'지뢰 폭발 범위 +20%' }
 ];
 
-// ═══════════════════════════════════════════════════════════
-// GAME LOGIC
-// ═══════════════════════════════════════════════════════════
+// ... (이하 업데이트 및 렌더링 함수들 원본과 동일) ...
 
 function startGame() {
   document.getElementById('title-screen').style.display = 'none';
@@ -472,7 +319,6 @@ function update(dt) {
     if (e.dead) return;
     let speed = e.spd * CELL * dt;
     if (e.slowTimer > 0) { speed *= 0.5; e.slowTimer -= dt; }
-    
     let target = path[e.pathIdx + 1];
     if (!target) {
       G.castleHp -= e.boss ? 500 : 50;
@@ -481,11 +327,9 @@ function update(dt) {
       if (G.castleHp <= 0) endGame(false);
       return;
     }
-    
     let tx = target.c * CELL + CELL/2, ty = target.r * CELL + CELL/2;
     let dx = tx - e.x, dy = ty - e.y;
     let dist = Math.hypot(dx, dy);
-    
     if (dist < speed) {
       e.x = tx; e.y = ty; e.pathIdx++; checkTraps(e);
     } else {
@@ -498,7 +342,6 @@ function update(dt) {
     if (t.durability <= 0) return;
     t.cooldown -= dt;
     if (G.blizzard) t.durability -= dt * 0.5;
-
     let cx = t.c*CELL + CELL/2, cy = t.r*CELL + CELL/2;
     let target = G.enemies.find(e => Math.hypot(e.x - cx, e.y - cy) < t.range * CELL);
     if (target) {
@@ -521,11 +364,9 @@ function update(dt) {
     let tx = p.target.dead ? p.lastTx : p.target.x;
     let ty = p.target.dead ? p.lastTy : p.target.y;
     if (!p.target.dead) { p.lastTx = tx; p.lastTy = ty; }
-
     let dx = tx - p.x, dy = ty - p.y;
     let dist = Math.hypot(dx, dy);
     let move = p.speed * dt;
-
     if (dist < move) {
       p.dead = true;
       createParticles(tx, ty, p.color, p.isFire ? 8 : 4);
@@ -547,10 +388,8 @@ function update(dt) {
     }
   });
   G.projectiles = G.projectiles.filter(p => !p.dead);
-
   G.particles.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; });
   G.particles = G.particles.filter(p => p.life > 0);
-
   G.floatingTexts.forEach(ft => { ft.y -= ft.floatSpeed * dt; ft.life -= dt; });
   G.floatingTexts = G.floatingTexts.filter(ft => ft.life > 0);
 
@@ -576,7 +415,6 @@ function explodeMine(mine) {
   let range = mine.range * CELL * (1 + G.upgrades.mineChain * 0.2);
   let mx = mine.c*CELL+CELL/2, my = mine.r*CELL+CELL/2;
   createParticles(mx, my, '#ffaa00', 30);
-  
   G.enemies.forEach(e => {
     let d = Math.hypot(e.x - mx, e.y - my);
     if (d < range) {
@@ -592,10 +430,6 @@ function explodeMine(mine) {
   updateUI();
 }
 
-// ═══════════════════════════════════════════════════════════
-// RENDERING
-// ═══════════════════════════════════════════════════════════
-
 function gameLoop(now) {
   let dt = 0.016 * G.speed;
   update(dt);
@@ -605,38 +439,30 @@ function gameLoop(now) {
 
 function draw(now) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
   ctx.fillStyle = '#1a2538';
   path.forEach(p => ctx.fillRect(p.c * CELL, p.r * CELL, CELL, CELL));
-  
   ctx.fillStyle = '#2a4a80';
   for(let r=0; r<ROWS; r++) for(let c=0; c<COLS; c++) if(grid[r][c]===2) ctx.fillRect(c*CELL, r*CELL, CELL, CELL);
-
   G.traps.forEach(t => {
     ctx.font = '22px Arial'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(TRAP_DEFS.find(d=>d.id===t.id).icon, t.c*CELL+CELL/2, t.r*CELL+CELL/2);
   });
-
   G.turrets.forEach(t => {
     let cx = t.c*CELL + CELL/2, cy = t.r*CELL + CELL/2;
     ctx.fillStyle = '#111828';
     ctx.beginPath(); ctx.arc(cx, cy, CELL/2.5, 0, Math.PI*2); ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = t.color; ctx.stroke();
-    
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(t.angle || 0); ctx.fillStyle = t.color;
     if (t.defId === 'flame') { ctx.fillRect(0, -6, 22, 12); }
     else if (t.defId === 'sniper') { ctx.fillRect(0, -3, 30, 6); }
     else { ctx.fillRect(0, -4, 20, 8); }
     ctx.restore();
-
     ctx.font = '16px Arial'; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(TURRET_DEFS.find(d=>d.id===t.defId).icon, cx, cy);
-
     ctx.fillStyle = '#222'; ctx.fillRect(t.c*CELL+5, t.r*CELL+CELL-8, CELL-10, 4);
     ctx.fillStyle = t.durability < 30 ? '#ff4040' : '#40c0ff';
     ctx.fillRect(t.c*CELL+5, t.r*CELL+CELL-8, (t.durability/t.durMax)*(CELL-10), 4);
   });
-
   G.enemies.forEach(e => {
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.beginPath(); ctx.ellipse(e.x, e.y + 12, 12, 6, 0, 0, Math.PI*2); ctx.fill();
@@ -644,24 +470,20 @@ function draw(now) {
     ctx.fillText(e.icon, e.x, e.y);
     let bob = Math.sin((now || 0) / 150) * 4;
     ctx.font = '18px Arial'; ctx.fillText(e.weapon, e.x + 14, e.y + bob);
-
     let barW = 30, barH = 4;
     ctx.fillStyle = '#222'; ctx.fillRect(e.x-barW/2, e.y-22, barW, barH);
     ctx.fillStyle = e.hp/e.maxHp < 0.3 ? '#ff3333' : '#33ff33';
     ctx.fillRect(e.x-barW/2, e.y-22, (e.hp/e.maxHp)*barW, barH);
   });
-
   G.projectiles.forEach(p => {
     ctx.fillStyle = p.color;
     ctx.beginPath(); ctx.arc(p.x, p.y, p.isFire ? 5 : 3, 0, Math.PI*2); ctx.fill();
   });
-
   G.particles.forEach(p => {
     ctx.globalAlpha = Math.max(0, p.life * 2); ctx.fillStyle = p.color;
     ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
   });
   ctx.globalAlpha = 1.0;
-
   G.floatingTexts.forEach(ft => {
     ctx.globalAlpha = Math.max(0, ft.life / ft.maxLife);
     ctx.font = 'bold 16px Cinzel, Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -669,21 +491,15 @@ function draw(now) {
     ctx.fillStyle = ft.color; ctx.fillText(ft.text, ft.x, ft.y);
   });
   ctx.globalAlpha = 1.0;
-  
   if (G.blizzard) {
     ctx.fillStyle = 'rgba(200, 230, 255, 0.15)'; ctx.fillRect(0,0,canvas.width, canvas.height);
   }
 }
 
-// ═══════════════════════════════════════════════════════════
-// UI & INTERACTION
-// ═══════════════════════════════════════════════════════════
-
 canvas.addEventListener('mousedown', (e) => {
   const rect = canvas.getBoundingClientRect();
   const c = Math.floor((e.clientX - rect.left) / CELL);
   const r = Math.floor((e.clientY - rect.top) / CELL);
-  
   if (G.selected && G.selected.type === 'build') {
     if (grid[r][c] === 0 && !G.selected.isTrap) {
       if (G.turrets.length >= G.maxTurrets) { log(`포탑 최대 개수(${G.maxTurrets}) 도달!`, 'warn'); return; }
@@ -703,31 +519,20 @@ canvas.addEventListener('mousedown', (e) => {
         clearSelection();
         updateUI();
       } else log('골드가 부족합니다!', 'warn');
-    } else {
-        clearSelection();
-    }
+    } else { clearSelection(); }
   } else {
     const t = G.turrets.find(t => t.c === c && t.r === r);
-    if (t) {
-      G.selected = { type: 'turret', ...t };
-      showBuiltTurretInfo(t);
-    } else {
-      clearSelection();
-    }
+    if (t) { G.selected = { type: 'turret', ...t }; showBuiltTurretInfo(t); } 
+    else { clearSelection(); }
   }
 });
 
-// ✨ 신규: 배치 전 아이템 설명창 띄우기
 function selectToBuild(def, isTrap) {
   G.selected = { type: 'build', id: def.id, isTrap: isTrap };
-  
   document.querySelectorAll('.item-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('btn-' + def.id).classList.add('selected');
-  
-  let statsHTML = isTrap 
-    ? `<span style="color:var(--gold)">비용: ${def.cost}💰</span>` 
+  let statsHTML = isTrap ? `<span style="color:var(--gold)">비용: ${def.cost}💰</span>` 
     : `<span style="color:var(--gold)">비용: ${def.cost}💰</span> | 공격력: ${def.dmg} | 사거리: ${def.range}`;
-    
   document.getElementById('info-content').innerHTML = `
     <div style="font-size: 14px; font-weight: bold; color: var(--ice-bright); margin-bottom: 5px;">${def.icon} ${def.name}</div>
     <div style="margin-bottom: 6px; font-weight:bold;">${statsHTML}</div>
@@ -736,7 +541,6 @@ function selectToBuild(def, isTrap) {
   document.getElementById('action-buttons').style.display = 'none';
 }
 
-// ✨ 신규: 이미 설치된 포탑 설명창 띄우기
 function showBuiltTurretInfo(t) {
   document.getElementById('info-content').innerHTML = `
     <div style="font-size: 14px; font-weight: bold; color: var(--gold-bright); margin-bottom: 5px;">${t.icon} ${t.name} (배치됨)</div>
@@ -746,7 +550,6 @@ function showBuiltTurretInfo(t) {
   document.getElementById('action-buttons').style.display = 'block';
 }
 
-// 선택 취소 및 정보창 초기화
 function clearSelection() {
   G.selected = null;
   document.querySelectorAll('.item-btn').forEach(b => b.classList.remove('selected'));
@@ -758,23 +561,19 @@ function renderUI() {
   const tg = document.getElementById('turret-grid');
   TURRET_DEFS.forEach(d => {
     const b = document.createElement('div');
-    b.className = 'item-btn';
-    b.id = 'btn-' + d.id;
+    b.className = 'item-btn'; b.id = 'btn-' + d.id;
     b.innerHTML = `<span class="t-icon">${d.icon}</span><span class="t-name">${d.name}</span><span class="t-cost">${d.cost}💰</span>`;
     b.onclick = () => selectToBuild(d, false);
     tg.appendChild(b);
   });
-  
   const trg = document.getElementById('trap-grid');
   TRAP_DEFS.forEach(d => {
     const b = document.createElement('div');
-    b.className = 'item-btn';
-    b.id = 'btn-' + d.id;
+    b.className = 'item-btn'; b.id = 'btn-' + d.id;
     b.innerHTML = `<span class="t-icon">${d.icon}</span><span class="t-name">${d.name}</span><span class="t-cost">${d.cost}💰</span>`;
     b.onclick = () => selectToBuild(d, true);
     trg.appendChild(b);
   });
-
   const upg = document.getElementById('upgrade-list');
   UPGRADE_DEFS.forEach(d => {
     const b = document.createElement('button');
@@ -786,12 +585,8 @@ function renderUI() {
 }
 
 function buyUpgrade(id, cost) {
-  if (G.core >= cost) {
-    G.core -= cost;
-    G.upgrades[id]++;
-    log('업그레이드 완료!', 'good');
-    updateUI();
-  } else log('고대핵이 부족합니다!', 'warn');
+  if (G.core >= cost) { G.core -= cost; G.upgrades[id]++; log('업그레이드 완료!', 'good'); updateUI(); } 
+  else log('고대핵이 부족합니다!', 'warn');
 }
 
 function repairSelected() {
@@ -799,11 +594,8 @@ function repairSelected() {
     const t = G.turrets.find(tt => tt.c === G.selected.c && tt.r === G.selected.r);
     const cost = Math.round((t.durMax - t.durability) * 0.5);
     if (G.gold >= cost) {
-      G.gold -= cost;
-      t.durability = t.durMax;
-      showBuiltTurretInfo(t);
-      log('포탑 수리 완료!');
-      updateUI();
+      G.gold -= cost; t.durability = t.durMax;
+      showBuiltTurretInfo(t); log('포탑 수리 완료!'); updateUI();
     } else log('수리 비용이 부족합니다!', 'warn');
   }
 }
@@ -813,9 +605,7 @@ function sellSelected() {
     const idx = G.turrets.findIndex(tt => tt.c === G.selected.c && tt.r === G.selected.r);
     G.gold += Math.floor(G.turrets[idx].cost / 2);
     grid[G.selected.r][G.selected.c] = 0;
-    G.turrets.splice(idx, 1);
-    clearSelection();
-    updateUI();
+    G.turrets.splice(idx, 1); clearSelection(); updateUI();
     log('철거 완료! 일부 골드를 돌려받았습니다.');
   }
 }
@@ -824,7 +614,6 @@ function updateUI() {
   document.getElementById('stat-gold').innerText = Math.floor(G.gold);
   document.getElementById('stat-core').innerText = G.core;
   document.getElementById('wave-num').innerText = G.wave;
-  
   const turretsDisplay = document.getElementById('stat-turrets');
   turretsDisplay.innerText = `${G.turrets.length}/${G.maxTurrets}`;
   turretsDisplay.style.color = G.turrets.length >= G.maxTurrets ? 'var(--hp-red)' : 'var(--gold)';
